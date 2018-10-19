@@ -10,45 +10,45 @@ import (
 	"testing"
 )
 
-func TestFakeSignedCert(t *testing.T) {
+func TestDevSignedCert(t *testing.T) {
 	r.Test(t, r.TestCase{
 		Providers: testProviders,
 		Steps: []r.TestStep{
 			r.TestStep{
 				Config: fmt.Sprintf(`
             provider "venafi" {
-              alias = "fake"
-              fake_mode = true
+              alias = "dev"
+              dev_mode = true
             }
-			resource "venafi_certificate" "fake_certificate" {
-            provider = "venafi.fake"
-            common_name = "fake-random.venafi.example.com"
+			resource "venafi_certificate" "dev_certificate" {
+            provider = "venafi.dev"
+            common_name = "dev-random.venafi.example.com"
             algorithm = "RSA"
             rsa_bits = "2048"
             san_dns = [
-              "fake-web01-random.example.com",
-              "fake-web02-random.example.com"
+              "dev-web01-random.example.com",
+              "dev-web02-random.example.com"
             ]
             san_ip = [
               "10.1.1.1",
               "192.168.0.1"
             ]
             san_email = [
-              "fake@venafi.com",
-              "fake2@venafi.com"
+              "dev@venafi.com",
+              "dev2@venafi.com"
             ]
             store_pkey = "true"
 			key_password = "123xxx"
           }
-          output "cert_certificate_fake" {
-			  value = "${venafi_certificate.fake_certificate.certificate}"
+          output "cert_certificate_dev" {
+			  value = "${venafi_certificate.dev_certificate.certificate}"
           }
-          output "cert_private_key_fake" {
-            value = "${venafi_certificate.fake_certificate.private_key_pem}"
+          output "cert_private_key_dev" {
+            value = "${venafi_certificate.dev_certificate.private_key_pem}"
           }
                 `),
 				Check: func(s *terraform.State) error {
-					gotUntyped := s.RootModule().Outputs["cert_certificate_fake"].Value
+					gotUntyped := s.RootModule().Outputs["cert_certificate_dev"].Value
 					got, ok := gotUntyped.(string)
 					if !ok {
 						return fmt.Errorf("output for \"key_pem_1\" is not a string")
@@ -62,17 +62,17 @@ func TestFakeSignedCert(t *testing.T) {
 					if err != nil {
 						return fmt.Errorf("error parsing cert: %s", err)
 					}
-					if expected, got := "fake-random.venafi.example.com", cert.Subject.CommonName; got != expected {
+					if expected, got := "dev-random.venafi.example.com", cert.Subject.CommonName; got != expected {
 						return fmt.Errorf("incorrect subject common name: expected %v, got %v", expected, got)
 					}
 
 					if expected, got := 3, len(cert.DNSNames); got != expected {
 						return fmt.Errorf("incorrect number of DNS names: expected %v, got %v", expected, got)
 					}
-					if expected, got := "fake-web01-random.example.com", cert.DNSNames[0]; got != expected {
+					if expected, got := "dev-web01-random.example.com", cert.DNSNames[0]; got != expected {
 						return fmt.Errorf("incorrect DNS name 0: expected %v, got %v", expected, got)
 					}
-					if expected, got := "fake-web02-random.example.com", cert.DNSNames[1]; got != expected {
+					if expected, got := "dev-web02-random.example.com", cert.DNSNames[1]; got != expected {
 						return fmt.Errorf("incorrect DNS name 0: expected %v, got %v", expected, got)
 					}
 
@@ -90,18 +90,18 @@ func TestFakeSignedCert(t *testing.T) {
 						return fmt.Errorf("incorrect number of email: expected %v, got %v", expected, got)
 					}
 
-					if expected, got := "fake@venafi.com", cert.EmailAddresses[0]; got != expected {
+					if expected, got := "dev@venafi.com", cert.EmailAddresses[0]; got != expected {
 						return fmt.Errorf("incorrect email 0: expected %v, got %v", expected, got)
 					}
-					if expected, got := "fake2@venafi.com", cert.EmailAddresses[1]; got != expected {
+					if expected, got := "dev2@venafi.com", cert.EmailAddresses[1]; got != expected {
 						return fmt.Errorf("incorrect email 0: expected %v, got %v", expected, got)
 					}
 
 					//Testing private key
-					gotPrivateUntyped := s.RootModule().Outputs["cert_private_key_fake"].Value
+					gotPrivateUntyped := s.RootModule().Outputs["cert_private_key_dev"].Value
 					gotPrivate, ok := gotPrivateUntyped.(string)
 					if !ok {
-						return fmt.Errorf("output for \"cert_private_key_fake\" is not a string")
+						return fmt.Errorf("output for \"cert_private_key_dev\" is not a string")
 					}
 
 					if !strings.HasPrefix(gotPrivate, "-----BEGIN RSA PRIVATE KEY----") {
@@ -118,40 +118,40 @@ func TestFakeSignedCert(t *testing.T) {
 			r.TestStep{
 				Config: `
             provider "venafi" {
-              alias = "fake"
-              fake_mode = true
+              alias = "dev"
+              dev_mode = true
             }
-			resource "venafi_certificate" "fake_certificate" {
-            provider = "venafi.fake"
-            common_name = "fake-random.venafi.example.com"
+			resource "venafi_certificate" "dev_certificate" {
+            provider = "venafi.dev"
+            common_name = "dev-random.venafi.example.com"
             algorithm = "RSA"
             rsa_bits = "4096"
             san_dns = [
-              "fake-web01-random.example.com",
-              "fake-web02-random.example.com"
+              "dev-web01-random.example.com",
+              "dev-web02-random.example.com"
             ]
             san_ip = [
               "10.1.1.1",
               "192.168.0.1"
             ]
             san_email = [
-              "fake@venafi.com",
-              "fake2@venafi.com"
+              "dev@venafi.com",
+              "dev2@venafi.com"
             ]
             store_pkey = "true"
 			key_password = "123xxx"
           }
-          output "cert_certificate_fake" {
-			  value = "${venafi_certificate.fake_certificate.certificate}"
+          output "cert_certificate_dev" {
+			  value = "${venafi_certificate.dev_certificate.certificate}"
           }
-          output "cert_private_key_fake" {
-            value = "${venafi_certificate.fake_certificate.private_key_pem}"
+          output "cert_private_key_dev" {
+            value = "${venafi_certificate.dev_certificate.private_key_pem}"
           }`, Check: func(s *terraform.State) error {
 					//Testing private key
-					gotPrivateUntyped := s.RootModule().Outputs["cert_private_key_fake"].Value
+					gotPrivateUntyped := s.RootModule().Outputs["cert_private_key_dev"].Value
 					gotPrivate, ok := gotPrivateUntyped.(string)
 					if !ok {
-						return fmt.Errorf("output for \"cert_private_key_fake\" is not a string")
+						return fmt.Errorf("output for \"cert_private_key_dev\" is not a string")
 					}
 
 					if !strings.HasPrefix(gotPrivate, "-----BEGIN RSA PRIVATE KEY----") {
@@ -168,30 +168,30 @@ func TestFakeSignedCert(t *testing.T) {
 	})
 }
 
-func TestFakeSignedCertECDSA(t *testing.T) {
+func TestDevSignedCertECDSA(t *testing.T) {
 	r.Test(t, r.TestCase{
 		Providers: testProviders,
 		Steps: []r.TestStep{
 			r.TestStep{
 				Config: `
             provider "venafi" {
-              alias = "fake"
-              fake_mode = true
+              alias = "dev"
+              dev_mode = true
             }
-			resource "venafi_certificate" "fake_certificate" {
-            provider = "venafi.fake"
-            common_name = "fake-random.venafi.example.com"
+			resource "venafi_certificate" "dev_certificate" {
+            provider = "venafi.dev"
+            common_name = "dev-random.venafi.example.com"
             algorithm = "ECDSA"
             store_pkey = "true"
 			key_password = "123xxx"
           }
-          output "cert_certificate_fake_ecdsa" {
-			  value = "${venafi_certificate.fake_certificate.certificate}"
+          output "cert_certificate_dev_ecdsa" {
+			  value = "${venafi_certificate.dev_certificate.certificate}"
           }
-          output "cert_private_key_fake_ecdsa" {
-            value = "${venafi_certificate.fake_certificate.private_key_pem}"
+          output "cert_private_key_dev_ecdsa" {
+            value = "${venafi_certificate.dev_certificate.private_key_pem}"
           }`, Check: func(s *terraform.State) error {
-					gotPrivateUntyped := s.RootModule().Outputs["cert_private_key_fake_ecdsa"].Value
+					gotPrivateUntyped := s.RootModule().Outputs["cert_private_key_dev_ecdsa"].Value
 					gotPrivate, ok := gotPrivateUntyped.(string)
 					if !ok {
 						return fmt.Errorf("output for \"private_key_pem\" is not a string")

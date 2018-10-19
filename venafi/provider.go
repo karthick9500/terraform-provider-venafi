@@ -14,7 +14,7 @@ const (
 	messageVenafiPingSucessfull   = "Venafi ping sucessfull"
 	messageVenafiClientInitFailed = "Failed to initialize Venafi client: "
 	messageVenafiConfigFailed     = "Failed to build config for Venafi issuer: "
-	messageUseFakemode            = "Using fake mode to issue certificate"
+	messageUseDevMode             = "Using dev mode to issue certificate"
 	messageUseCloud               = "Using Cloud to issue certificate"
 )
 
@@ -34,7 +34,7 @@ func Provider() terraform.ResourceProvider {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("VENAFI_ZONE", "Default"),
-				Description: `Name of Venafi Platfrom or Cloud policy. 
+				Description: `DN of the Venafi Platform policy folder or name of the Venafi Cloud zone. 
 Example for Platform: testpolicy\\vault
 Example for Venafi Cloud: Default`,
 			},
@@ -43,13 +43,13 @@ Example for Venafi Cloud: Default`,
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("VENAFI_USER", nil),
-				Description: `web API user for Venafi Platfrom Example: admin`,
+				Description: `WebSDK user for Venafi Platform. Example: admin`,
 			},
 			"tpp_password": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("VENAFI_PASS", nil),
-				Description: `Password for web API user Example: password`,
+				Description: `Password for WebSDK user. Example: password`,
 			},
 			"api_key": &schema.Schema{
 				Type:        schema.TypeString,
@@ -60,15 +60,15 @@ Example for Venafi Cloud: Default`,
 			"trust_bundle": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
-				Description: `Use to specify a PEM formatted file with certificates to be used as trust anchors when communicating with the remote server.
+				Description: `Use to specify a PEM-formatted file that contains certificates to be trust anchors for all communications with the Venafi Web Service.
 Example:
   trust_bundle = "${file("chain.pem")}"`,
 			},
-			"fake_mode": &schema.Schema{
+			"dev_mode": &schema.Schema{
 				Type:        schema.TypeBool,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("VENAFI_FAKEMODE", nil),
-				Description: `Set it to true to use face CA instead of Cloud or Platform to issue certificates. Useful for testing.`,
+				DefaultFunc: schema.EnvDefaultFunc("VENAFI_DEVMODE", nil),
+				Description: `When set to true, the resulting certificate will be issued by an ephemeral, no trust CA rather than enrolling using Venafi Cloud or Platform. Useful for development and testing.`,
 			},
 		},
 
@@ -88,13 +88,13 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	tppUser := d.Get("tpp_username").(string)
 	tppPassword := d.Get("tpp_password").(string)
 	zone := d.Get("zone").(string)
-	fakeMode := d.Get("fake_mode").(bool)
+	devMode := d.Get("dev_mode").(bool)
 	trustBundle := d.Get("trust_bundle").(string)
 
 	var cfg vcert.Config
 
-	if fakeMode {
-		log.Printf(messageUseFakemode)
+	if devMode {
+		log.Printf(messageUseDevMode)
 		cfg = vcert.Config{
 			ConnectorType: endpoint.ConnectorTypeFake,
 			LogVerbose:    true,

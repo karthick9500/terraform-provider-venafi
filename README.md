@@ -51,7 +51,7 @@ Provider has the following options:
 | `tpp_password` |string   |Platfrom password. Example: secret|
 | `api_key`      |string   |Cloud API key. Example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx|
 | `trust_bundle` |string   |Trust bundle for the platfrom in PEM format. You can use file function. Example: ${file("chain.pem")}|
-| `fake_mode`    |bool     |Set it to true if you just want to test provider without Platform of CLoud configuration|
+| `dev_mode`    |bool     |Set it to true if you just want to test provider without Platform of Cloud configuration|
 
 If you set the 'api_key', the Venafi Cloud endpoint will be used.  If you set the 'tpp_username' and  'tpp_password', Venafi Platform will be used.
 

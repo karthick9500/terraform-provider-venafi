@@ -27,7 +27,7 @@ fmtcheck:
 	@sh -c "'$(CURDIR)/scripts/gofmtcheck.sh'"
 
 #Integration tests using real terrafomr binary
-test_e2e: test_e2e_fake test_e2e_tpp test_e2e_cloud
+test_e2e: test_e2e_dev test_e2e_tpp test_e2e_cloud
 
 test_e2e_tpp:
 	echo yes|terraform apply -target=venafi_certificate.tpp_certificate
@@ -43,20 +43,20 @@ test_e2e_cloud:
 	cat /tmp/cert_certificate_cloud.pem
 	cat /tmp/cert_certificate_cloud.pem|openssl x509 -inform pem -noout -issuer -serial -subject -dates
 
-test_e2e_fake:
-	echo yes|terraform apply -target=venafi_certificate.fake_certificate
-	terraform state show venafi_certificate.fake_certificate
-	terraform output cert_certificate_fake > /tmp/cert_certificate_fake.pem
-	cat /tmp/cert_certificate_fake.pem
-	cat /tmp/cert_certificate_fake.pem|openssl x509 -inform pem -noout -issuer -serial -subject -dates
-	terraform output cert_private_key_fake > /tmp/cert_private_key_fake.pem
-	cat /tmp/cert_private_key_fake.pem
+test_e2e_dev:
+	echo yes|terraform apply -target=venafi_certificate.dev_certificate
+	terraform state show venafi_certificate.dev_certificate
+	terraform output cert_certificate_dev > /tmp/cert_certificate_dev.pem
+	cat /tmp/cert_certificate_dev.pem
+	cat /tmp/cert_certificate_dev.pem|openssl x509 -inform pem -noout -issuer -serial -subject -dates
+	terraform output cert_private_key_dev > /tmp/cert_private_key_dev.pem
+	cat /tmp/cert_private_key_dev.pem
 
-test_e2e_fake_ecdsa:
-	echo yes|terraform apply -target=venafi_certificate.fake_ecdsa_certificate
-	terraform state show venafi_certificate.fake_ecdsa_certificate
-	terraform output cert_certificate_fake_ecdsa > /tmp/cert_certificate_fake_ecdsa.pem
-	cat /tmp/cert_certificate_fake_ecdsa.pem
-	cat /tmp/cert_certificate_fake_ecdsa.pem|openssl x509 -inform pem -noout -issuer -serial -subject -dates
-	terraform output cert_private_key_fake_ecdsa > /tmp/cert_private_key_fake_ecdsa.pem
-	cat /tmp/cert_private_key_fake_ecdsa.pem
+test_e2e_dev_ecdsa:
+	echo yes|terraform apply -target=venafi_certificate.dev_ecdsa_certificate
+	terraform state show venafi_certificate.dev_ecdsa_certificate
+	terraform output cert_certificate_dev_ecdsa > /tmp/cert_certificate_dev_ecdsa.pem
+	cat /tmp/cert_certificate_dev_ecdsa.pem
+	cat /tmp/cert_certificate_dev_ecdsa.pem|openssl x509 -inform pem -noout -issuer -serial -subject -dates
+	terraform output cert_private_key_dev_ecdsa > /tmp/cert_private_key_dev_ecdsa.pem
+	cat /tmp/cert_private_key_dev_ecdsa.pem

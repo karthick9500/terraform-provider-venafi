@@ -30,11 +30,11 @@ resource "random_string" "cn" {
 /*
 Here we configuring thre providers using provider aliases.
 
-Fake provider configuration (alias = "fake") for testing, it don't need any external sources configured.
+Dev provider configuration (alias = "dev") for testing, it don't need any external sources configured.
 */
 provider "venafi" {
-  alias = "fake"
-  fake_mode = true
+  alias = "dev"
+  dev_mode = true
 }
 
 /*
@@ -61,16 +61,16 @@ provider "venafi" {
 }
 
 //Certificate resource definition
-resource "venafi_certificate" "fake_certificate" {
+resource "venafi_certificate" "dev_certificate" {
   //Name of the used provider
-  provider = "venafi.fake"
-  common_name = "fake-${random_string.cn.result}.venafi.example.com"
+  provider = "venafi.dev"
+  common_name = "dev-${random_string.cn.result}.venafi.example.com"
   //Key encription algotrythm
   algorithm = "RSA"
   //DNS aliases
   san_dns = [
-    "fake-web01-${random_string.cn.result}.example.com",
-    "fake-web02-${random_string.cn.result}.example.com"
+    "dev-web01-${random_string.cn.result}.example.com",
+    "dev-web02-${random_string.cn.result}.example.com"
   ]
   //IP aliases
   san_ip = [
@@ -79,8 +79,8 @@ resource "venafi_certificate" "fake_certificate" {
   ]
   //Email aliases
   san_email = [
-    "fake@venafi.com",
-    "fake2@venafi.com"
+    "dev@venafi.com",
+    "dev2@venafi.com"
   ]
   //private key password
   key_password = "xxxxx"
@@ -89,50 +89,50 @@ resource "venafi_certificate" "fake_certificate" {
 }
 
 //outpu certificate
-output "cert_certificate_fake" {
-  value = "${venafi_certificate.fake_certificate.certificate}"
+output "cert_certificate_dev" {
+  value = "${venafi_certificate.dev_certificate.certificate}"
 }
 
 //output certificate chain
-output "cert_chain_fake" {
-  value = "${venafi_certificate.fake_certificate.chain}"
+output "cert_chain_dev" {
+  value = "${venafi_certificate.dev_certificate.chain}"
 }
 
 //output private key
-output "cert_private_key_fake" {
-  value = "${venafi_certificate.fake_certificate.private_key_pem}"
+output "cert_private_key_dev" {
+  value = "${venafi_certificate.dev_certificate.private_key_pem}"
 }
 
-resource "venafi_certificate" "fake_certificate_ecdsa" {
-  provider = "venafi.fake"
-  common_name = "fake-${random_string.cn.result}.venafi.example.com"
+resource "venafi_certificate" "dev_certificate_ecdsa" {
+  provider = "venafi.dev"
+  common_name = "dev-${random_string.cn.result}.venafi.example.com"
   algorithm = "ECDSA"
   san_dns = [
-    "fake-web01-${random_string.cn.result}.example.com",
-    "fake-web02-${random_string.cn.result}.example.com"
+    "dev-web01-${random_string.cn.result}.example.com",
+    "dev-web02-${random_string.cn.result}.example.com"
   ]
   san_ip = [
     "10.1.1.1",
     "192.168.0.1"
   ]
   san_email = [
-    "fake@venafi.com",
-    "fake2@venafi.com"
+    "dev@venafi.com",
+    "dev2@venafi.com"
   ]
   key_password = "xxxxx"
   store_pkey = "true"
 }
 
-output "cert_certificate_fake_ecdsa" {
-  value = "${venafi_certificate.fake_certificate_ecdsa.certificate}"
+output "cert_certificate_dev_ecdsa" {
+  value = "${venafi_certificate.dev_certificate_ecdsa.certificate}"
 }
 
-output "cert_chain_fake_ecdsa" {
-  value = "${venafi_certificate.fake_certificate_ecdsa.chain}"
+output "cert_chain_dev_ecdsa" {
+  value = "${venafi_certificate.dev_certificate_ecdsa.chain}"
 }
 
-output "cert_private_key_fake_ecdsa" {
-  value = "${venafi_certificate.fake_certificate_ecdsa.private_key_pem}"
+output "cert_private_key_dev_ecdsa" {
+  value = "${venafi_certificate.dev_certificate_ecdsa.private_key_pem}"
 }
 
 resource "venafi_certificate" "cloud_certificate" {
