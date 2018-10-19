@@ -3,7 +3,7 @@ This is an example terrafrom file to show capabilities of vcert integration.
 */
 
 /*
-Setting terraform variables for authentication. Yo need to add TF_VAR_ prefix to variables to be seen inside terraform.
+Setting the provider variables for authentication. You need to add the TF_VAR_ prefix to variables so they can be seen inside Terraform.
 Example:
 export TF_VAR_TPPUSER='admin'
 export TF_VAR_TPPPASSWORD='secret'
@@ -39,7 +39,7 @@ provider "venafi" {
 
 /*
 Cloud profivder configuration (alias = "cloud")
-Here we getting credentials from variables TF_VAR_CLOUDAPIKEY TF_VAR_CLOUDZONE
+Here we getting credentials from variables TF_VAR_CLOUDAPIKEY and TF_VAR_CLOUDZONE
 */
 provider "venafi" {
   alias = "cloud"
@@ -49,7 +49,7 @@ provider "venafi" {
 
 /*
 Platfrom provider configuration (alias = "tpp")
-Here we getting credentials from variables TF_VAR_TPPUSER TF_VAR_TPPPASSWORD TF_VAR_TPPURL TF_VAR_TPPZONE
+Here we getting credentials from variables TF_VAR_TPPUSER, TF_VAR_TPPPASSWORD, TF_VAR_TPPURL and TF_VAR_TPPZONE
 */
 provider "venafi" {
   alias = "tpp"

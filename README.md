@@ -1,6 +1,6 @@
 # terraform-provider-venafi
 
-This is a terraform provider developed with vcert library (https://github.com/Venafi/vcert)
+This is a Terraform provider that is developed with the Venafi VCert library (https://github.com/Venafi/vcert).
 
 ## Requirements for Venafi Platform policy
 
@@ -24,14 +24,14 @@ X509v3 extensions:
     CA Issuers - URI:ldap:///CN=QA%20Venafi%20CA,CN=AIA,CN=Public%20Key%20Services,CN=Services,CN=Configuration,DC=venqa,DC=venafi,DC=com?cACertificate?base?objectClass=certificationAuthority}}
 ```
 
-4. Option in Venafi Platform CA configuration template "Automatically include CN as DNS SAN" should be set to true.
+4.  In the Venafi Platform CA configuration template, set  'Automatically include CN as DNS SAN'  to true.
 
 ## Usage
 ### Install plugin
 
 Get the binary "terraform-provider-venafi" from release page and put it somewhere in your $PATH
 
-### Create provider
+### Create providerThis is a Terraform provider that is developed with the Venafi VCert library (https://github.com/Venafi/vcert)
 To use the terraform provider create a `main.tf` file. In here you must first create the provider. This would be done by creating a provider block.
 
 ```
@@ -41,7 +41,7 @@ provider "venafi" {
 }
 ```
 
-Provider have following options:
+Provider has the following options:
 
 | field          | type    |description                                                  |
 | -------------- | --------|-------------------------------------------------------------|
@@ -53,10 +53,10 @@ Provider have following options:
 | `trust_bundle` |string   |Trust bundle for the platfrom in PEM format. You can use file function. Example: ${file("chain.pem")}|
 | `fake_mode`    |bool     |Set it to true if you just want to test provider without Platform of CLoud configuration|
 
-If you set api_key Cloud endpoint will be used, if you set tpp_username, tpp_password Platform will be used.
+If you set the 'api_key', the Venafi Cloud endpoint will be used.  If you set the 'tpp_username' and  'tpp_password', Venafi Platform will be used.
 
 ### Import trust chain for the Platform
-If your Platform using internal certificate you may use trust_bundle option. You can import it to the chain.pem file. main.tf file is already configured to use this file as a trust bundle.
+If Venafi Platform uses an internal certificate, you can use the 'trust_bundle' option. Be sure to import the certificate to the chain.pem file because the main.tf file is already configured to use this file as a trust bundle.
 
 ```
 echo | openssl s_client -showcerts -servername TPP_ADDRESS -connect TPP_ADDRESS:TPP_PORT | openssl x509 -outform pem -out chain.pem
@@ -127,13 +127,13 @@ output "cert_private_key" {
 # Development
 
 ## Pre-requisites
-Go 1.7 or higher.
+Go language 1.7 or higher.
 
 ## Building
 
 Run `make build` to build the project.
 
-This will create the binary `terraform-provider-venafi`. To have terraform pick this up and use it copy the binary to a location on your `$PATH`.
+This will create the binary `terraform-provider-venafi`. To have Terraform pick up and run the provider, copy the binary to a location on your `$PATH`.
 
 To run tests export following credentials variables:
 
